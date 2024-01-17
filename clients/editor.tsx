@@ -31,7 +31,6 @@ import "@arco-themes/react-easy-email-theme/css/arco.css";
 import axios from "axios";
 import { Config } from "final-form";
 import { useRouter } from "next/router";
-import { log } from "console";
 
 const defaultCategories: ExtensionProps["categories"] = [
   {
@@ -65,35 +64,6 @@ const defaultCategories: ExtensionProps["categories"] = [
       },
     ],
   },
-  {
-    label: "Layout",
-    active: true,
-    displayType: "column",
-    blocks: [
-      {
-        title: "2 columns",
-        payload: [
-          ["50%", "50%"],
-          ["33%", "67%"],
-          ["67%", "33%"],
-          ["25%", "75%"],
-          ["75%", "25%"],
-        ],
-      },
-      {
-        title: "3 columns",
-        payload: [
-          ["33.33%", "33.33%", "33.33%"],
-          ["25%", "25%", "50%"],
-          ["50%", "25%", "25%"],
-        ],
-      },
-      {
-        title: "4 columns",
-        payload: [["25%", "25%", "25%", "25%"]],
-      },
-    ],
-  },
 ];
 
 export default function App(): React.ReactNode {
@@ -104,30 +74,13 @@ export default function App(): React.ReactNode {
 
   const router = useRouter();
   const uuid = router.query.uuid;
-  console.log("uuid", typeof uuid);
 
   useEffect(() => {
-    let URL = `template2`;
-
-    if (uuid) {
-      if (uuid === "1") {
-        URL = "template";
-      } else if (uuid === "2") {
-        URL = "template2";
-      } else if (uuid === "3") {
-        URL = "template3";
-      } else URL = "template3";
-      // axios.get(`/api/${URL}`).then(({ data }) => {
-      //   console.log("data", data);
-
-      //   setTemplate(data);
-      // });
-      axios
-        .get(`https://daadaak.hamim.dev/api/default_email_template/${uuid}`)
-        .then((res) => {
-          setTemplate(res?.data);
-        });
-    }
+    axios
+      .get(`https://daadaak.hamim.dev/api/default_email_template/${uuid}`)
+      .then((res) => {
+        setTemplate(res?.data);
+      });
   }, [uuid]);
 
   const onSubmit: Config<IEmailTemplate>["onSubmit"] = (values: any) => {
@@ -151,7 +104,7 @@ export default function App(): React.ReactNode {
       data={template}
       height={"calc(100vh - 70px)"}
       autoComplete
-      dashed={false}
+      dashed={true}
       onSubmit={onSubmit}
     >
       {({ values }, { submit, restart }) => {
@@ -159,31 +112,9 @@ export default function App(): React.ReactNode {
           <>
             <PageHeader
               style={{ background: "var(--color-bg-2)" }}
-              title="Edit"
+              title="Edit Your Email Template"
               extra={
                 <Space>
-                  <a
-                    href="https://www.buymeacoffee.com/easyemail?utm_source=webside&utm_medium=button&utm_content=donate"
-                    target="_blank"
-                    onClick={(ev) => {
-                      ev.preventDefault();
-                      window.open(
-                        "https://www.buymeacoffee.com/easyemail?utm_source=webside&utm_medium=button&utm_content=donate",
-                        "_blank"
-                      );
-                    }}
-                  >
-                    <img
-                      style={{
-                        marginTop: -16,
-                        position: "relative",
-                        top: 11,
-                        height: 32,
-                      }}
-                      src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png"
-                      alt="Buy Me A Coffee"
-                    />
-                  </a>
                   <Button type="primary" onClick={submit}>
                     Save
                   </Button>
@@ -192,7 +123,7 @@ export default function App(): React.ReactNode {
             />
             <StandardLayout
               compact={!smallScene}
-              showSourceCode={true}
+              showSourceCode={false}
               categories={defaultCategories}
             >
               <EmailEditor />

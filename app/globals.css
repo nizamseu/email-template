@@ -19,3 +19,10 @@
 body {
   color: rgb(var(--foreground-rgb));
 }
+.easy-email-editor-tabWrapper {
+  display: none !important;
+  /* margin-bottom: 10px !important; */
+}
+.arco-tabs-header-scroll {
+  display: none !important;
+}
