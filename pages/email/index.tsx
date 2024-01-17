@@ -1,31 +1,40 @@
+import axios from "axios";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const index = () => {
+const Index = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const res = await axios
+        .get("https://daadaak.hamim.dev/api/default_email_template/")
+        .then((res) => {
+          setData(res?.data?.results);
+        });
+    };
+
+    loadData();
+  }, []);
+
+  console.log(data);
+
   return (
-    <div className=" h-screen bg-gray-500">
-      <div className=" grid grid-cols-3 gap-4 mx-4 py-5">
-        <Link
-          href={`/email/${1}`}
-          className=" w-full h-40 border rounded bg-white text-gray-900"
-        >
-          Template one{" "}
-        </Link>
-        <Link
-          href={`/email/${2}`}
-          className=" w-full h-40 border rounded bg-white text-gray-900"
-        >
-          Template two{" "}
-        </Link>
-        <Link
-          href={`/email/${3}`}
-          className=" w-full h-40 border rounded bg-white text-gray-900"
-        >
-          Template three{" "}
-        </Link>
+    <div className="h-screen bg-gray-500">
+      <div className=" px-10 py-5 mx-10">
+        <p className=" text-lg text-white">Template name</p>
+        {data?.map((item: any, index: number) => (
+          <Link
+            href={`/email/${item?.uuid}`}
+            key={index}
+            className="w-full  text-white"
+          >
+            <p className=" my-2"> {item.subject}</p>
+          </Link>
+        ))}
       </div>
     </div>
   );
 };
 
-export default index;
+export default Index;

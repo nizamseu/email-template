@@ -96,8 +96,8 @@ const defaultCategories: ExtensionProps["categories"] = [
   },
 ];
 
-export default function App() {
-  const [template, setTemplate] = useState<IEmailTemplate | null>(null);
+export default function App(): React.ReactNode {
+  const [template, setTemplate] = useState<any>(null);
   const { width } = useWindowSize();
 
   const smallScene = width < 1400;
@@ -117,14 +117,31 @@ export default function App() {
       } else if (uuid === "3") {
         URL = "template3";
       } else URL = "template3";
-      axios.get(`/api/${URL}`).then(({ data }) => {
-        setTemplate(data);
-      });
+      // axios.get(`/api/${URL}`).then(({ data }) => {
+      //   console.log("data", data);
+
+      //   setTemplate(data);
+      // });
+      axios
+        .get(`https://daadaak.hamim.dev/api/default_email_template/${uuid}`)
+        .then((res) => {
+          setTemplate(res?.data);
+        });
     }
   }, [uuid]);
 
-  const onSubmit: Config<IEmailTemplate>["onSubmit"] = (values) => {
+  const onSubmit: Config<IEmailTemplate>["onSubmit"] = (values: any) => {
     console.log(values);
+    // values.user = template?.user;
+    axios
+      .patch(
+        `https://daadaak.hamim.dev/api/default_email_template/${uuid}/`,
+        values
+      )
+      .then((res) => {
+        alert("template Updated");
+        console.log("res", res);
+      });
   };
 
   if (!template) return <Spin />;
